@@ -37,6 +37,8 @@ if st.button("Find Parcel") and apn_input:
         "spatialReference": parcel_sr
     }
 
+    st.write("Centroid used for query:", centroid)
+
     # Query district by centroid point
     district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
     district_query = district_layer.query(
