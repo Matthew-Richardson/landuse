@@ -12,10 +12,15 @@ y = 37.49508874613804
 st.title("District Plan from Hardcoded Coordinates")
 st.write("Using Centroid (WGS84):", {"longitude": x, "latitude": y})
 
+from pyproj import Transformer
+
+transformer = Transformer.from_crs("EPSG:4326", "EPSG:26913", always_xy=True)
+x_utm, y_utm = transformer.transform(x, y)
 manual_point = {
-    "x": x,
-    "y": y,
-    "spatialReference": {"wkid": 4326}
+    "x": x_utm,
+    "y": y_utm,
+    "spatialReference": {"wkid": 26913}
+}
 }
 
 district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
