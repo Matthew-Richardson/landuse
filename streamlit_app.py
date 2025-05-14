@@ -79,7 +79,7 @@ if apn_input:
 
         # Add parcel polygon to the map
         folium.Polygon(
-            locations=[(lat, lon) for lon, lat in coords],
+            locations=[(lat, lon) for lon, lat in coords],  # Fix: swap to (y, x)
             color='red',
             weight=2,
             fill=False,
