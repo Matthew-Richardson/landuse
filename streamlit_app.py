@@ -21,7 +21,6 @@ manual_point = {
     "y": y_utm,
     "spatialReference": {"wkid": 26913}
 }
-}
 
 district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
 district_query = district_layer.query(
