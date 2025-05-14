@@ -29,7 +29,7 @@ st.write("Layer Spatial Reference WKID:", sr)
 district_query = district_layer.query(
     geometry=manual_point,
     geometry_type="esriGeometryPoint",
-    spatial_rel="esriSpatialRelIntersects",
+    spatial_rel="esriSpatialRelContains",
     out_fields="PLANNAME"
 )
 
