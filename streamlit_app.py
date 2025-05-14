@@ -30,6 +30,8 @@ district_query = district_layer.query(
     out_fields="PLANNAME"
 )
 
+st.write("Raw query result:", district_query)
+
 if not district_query.features:
     st.error("No planning district found at specified coordinates.")
 else:
