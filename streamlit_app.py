@@ -2,6 +2,7 @@
 import streamlit as st
 from arcgis.features import FeatureLayer
 from shapely.geometry import shape
+from pyproj import Transformer
 
 # === CONFIG ===
 PARCEL_FEATURE_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
@@ -37,25 +38,7 @@ if st.button("Find Parcel") and apn_input:
         "spatialReference": parcel_sr
     }
 
-    from pyproj import Transformer
-
-    # Convert centroid to WGS84 for display
+    # Convert centroid to WGS84 for display only
     transformer = Transformer.from_crs(f"EPSG:{parcel_sr['wkid']}", "EPSG:4326", always_xy=True)
     lon, lat = transformer.transform(centroid['x'], centroid['y'])
     st.write("Centroid (WGS84):", {"longitude": lon, "latitude": lat})
-
-    # Query district by centroid point
-    district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
-    district_query = district_layer.query(
-        geometry=centroid,
-        geometry_type="esriGeometryPoint",
-        spatial_rel="esriSpatialRelIntersects",
-        out_fields="PLANNAME"
-    )
-
-    if not district_query.features:
-        st.error("No planning district found at parcel centroid.")
-    else:
-        plan_name = district_query.features[0].attributes['PLANNAME']
-        st.subheader("Planning District")
-        st.write(plan_name)
