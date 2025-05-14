@@ -7,6 +7,14 @@ from shapely.geometry import Point, shape
 PARCEL_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
 DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer/0"
 
+# === Map Config ===
+from arcgis.mapping import WebMap
+from arcgis.gis import GIS
+
+MAP_1_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer"
+MAP_2_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
+MAP_3_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer"
+
 # === Streamlit UI ===
 st.title("District Plan Lookup by APN")
 apn_input = st.text_input("Enter Parcel Number (APN)")
@@ -60,7 +68,44 @@ if apn_input:
             matching_plan = feature.attributes["PLANNAME"]
             break
 
-    if matching_plan:
+    # === Interactive Map Previews with folium ===
+    import folium
+    from streamlit_folium import st_folium
+
+    st.subheader("Interactive Parcel Maps")
+
+    base_map = folium.Map(location=[y, x], zoom_start=15, tiles=None)
+
+    folium.TileLayer(
+        tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/tile/{z}/{y}/{x}",
+        attr="Parcels",
+        name="Parcels"
+    ).add_to(base_map)
+
+    folium.TileLayer(
+        tiles="https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer/tile/{z}/{y}/{x}",
+        attr="Ortho 2023",
+        name="Ortho"
+    ).add_to(base_map)
+
+    folium.TileLayer(
+        tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/tile/{z}/{y}/{x}",
+        attr="Land Use",
+        name="Land Use"
+    ).add_to(base_map)
+
+    folium.Marker([y, x], tooltip=f"APN: {apn_input}").add_to(base_map)
+
+    folium.LayerControl().add_to(base_map)
+
+    st_data = st_folium(base_map, width=700, height=500)
+
+    st.caption("Use the layer toggle to view parcel, ortho, and land use maps.")
+
+    except Exception as e:
+        st.warning(f"Map rendering failed: {e}")
+
+
         st.subheader("Detected Planning District")
         st.write(matching_plan)
     else:
