@@ -17,7 +17,7 @@ DISTRICTS_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_L
 ORTHO_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
 DISTRICT_LAYER_MAP = {
     "SOUTH EAST LA PLATA": None,
-    "NORTH COUNTY": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer/0"
+    "NORTH COUNTY DISTRICT PLAN": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer/0"
 }
 EXCEL_PATH = "LandUse_Master.xlsx"
 
@@ -49,6 +49,7 @@ if st.button("Generate Report") and apn_input:
         st.stop()
 
     plan_name = district_query.features[0].attributes['PLANNAME'].strip().upper()
+    st.write(f"Detected PLANNAME: '{plan_name}'")
 
     if plan_name == "SOUTH EAST LA PLATA":
         summary_text = f"""
