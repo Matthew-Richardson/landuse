@@ -21,7 +21,11 @@ if st.button("Check District") and apn_input:
         st.stop()
 
     parcel_geom = parcel_query.features[0].geometry
-    parcel_shape = shape(parcel_geom)
+    geojson_geom = {
+        "type": "Polygon",
+        "coordinates": parcel_geom["rings"]
+    }
+    parcel_shape = shape(geojson_geom)
     centroid = parcel_shape.centroid
     centroid_point = {
         "x": centroid.x,
