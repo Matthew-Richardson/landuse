@@ -30,10 +30,11 @@ if st.button("Find Parcel") and apn_input:
     coords = rings[0]
     xs = [pt[0] for pt in coords]
     ys = [pt[1] for pt in coords]
+    parcel_sr = parcel_feature.geometry.get("spatialReference", {"wkid": 4326})
     centroid = {
         "x": sum(xs) / len(xs),
         "y": sum(ys) / len(ys),
-        "spatialReference": {"wkid": 4326}
+        "spatialReference": parcel_sr
     }
 
     # Query district by centroid point
