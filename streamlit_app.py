@@ -30,5 +30,5 @@ if not district_query.features:
     st.error("No planning district found at specified coordinates.")
 else:
     st.subheader("Detected Planning District")
-    plan_name = district_query.features[0].attributes['PLANNAME']
+    plan_name = district_query.features.attributes['PLANNAME']
     st.write(plan_name)
