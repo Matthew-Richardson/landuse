@@ -56,10 +56,10 @@ if st.button("Generate Report") and apn_input:
         f.attributes['PLANNAME'].strip().upper() 
         for f in district_query.features
     ]
-st.write("All intersecting PLANNAMEs:", detected_plans)
+    st.write("All intersecting PLANNAMEs:", detected_plans)
 
-# Use first plan for now
-plan_name = detected_plans[0]
+    # Use first plan for now
+    plan_name = detected_plans[0]
 
     if plan_name == "SOUTH EAST LA PLATA":
         summary_text = f"""
