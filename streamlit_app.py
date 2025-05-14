@@ -3,7 +3,7 @@ import streamlit as st
 from arcgis.features import FeatureLayer
 
 # === CONFIG ===
-DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer/"
+DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer/0"
 
 # === Hardcoded Centroid in WGS84 ===
 x = -107.80174291778516
@@ -23,6 +23,9 @@ manual_point = {
 }
 
 district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
+layer_info = district_layer.properties
+sr = layer_info.extent.spatialReference['wkid']
+st.write("Layer Spatial Reference WKID:", sr)
 district_query = district_layer.query(
     geometry=manual_point,
     geometry_type="esriGeometryPoint",
