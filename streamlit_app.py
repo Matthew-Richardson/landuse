@@ -77,6 +77,15 @@ if apn_input:
 
         folium.Marker([y, x], tooltip=f"APN: {apn_input}", icon=folium.Icon(color='red')).add_to(base_map)
 
+        # Add parcel polygon to the map
+        folium.Polygon(
+            locations=[(lat, lon) for lon, lat in coords],
+            color='red',
+            weight=2,
+            fill=False,
+            tooltip="Parcel Boundary"
+        ).add_to(base_map)
+
         st_data = st_folium(base_map, width=700, height=500)
 
         st.caption("Use the layer toggle to view parcel, ortho, and land use maps.")
