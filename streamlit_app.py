@@ -32,7 +32,6 @@ if st.button("Check District") and apn_input:
         st.error("Parcel is not located within any planning district.")
         st.stop()
 
- detected_plan = district_query.features[0].attributes['PLANNAME'].strip().upper()
-st.subheader("Detected Planning District")
-st.write(detected_plan)
-
+    detected_plan = district_query.features[0].attributes['PLANNAME'].strip().upper()
+    st.subheader("Detected Planning District")
+    st.write(detected_plan)
