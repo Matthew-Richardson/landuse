@@ -8,8 +8,6 @@ PARCEL_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Laye
 DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer/0"
 
 # === Map Config ===
-from arcgis.mapping import WebMap
-from arcgis.gis import GIS
 
 MAP_1_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer"
 MAP_2_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
@@ -107,5 +105,5 @@ if apn_input:
 
     except Exception as e:
         st.warning(f"Map rendering failed: {e}")
-    else:
+    if not matching_plan:
         st.error("No planning district polygon contains the centroid.")
