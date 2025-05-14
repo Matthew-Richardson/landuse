@@ -1,6 +1,8 @@
 # streamlit_app.py
 import streamlit as st
 from arcgis.features import FeatureLayer
+from shapely.geometry import shape
+from shapely.geometry import Point
 
 # === CONFIG ===
 PARCEL_FEATURE_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
@@ -19,17 +21,24 @@ if st.button("Check District") and apn_input:
         st.stop()
 
     parcel_geom = parcel_query.features[0].geometry
+    parcel_shape = shape(parcel_geom)
+    centroid = parcel_shape.centroid
+    centroid_point = {
+        "x": centroid.x,
+        "y": centroid.y,
+        "spatialReference": {"wkid": 4326}
+    }
 
     district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
     district_query = district_layer.query(
-        geometry=parcel_geom,
-        geometry_type="esriGeometryPolygon",
-        spatial_rel="esriSpatialRelContains",
+        geometry=centroid_point,
+        geometry_type="esriGeometryPoint",
+        spatial_rel="esriSpatialRelIntersects",
         out_fields="PLANNAME"
     )
 
     if not district_query.features:
-        st.error("Parcel is not located within any planning district.")
+        st.error("Parcel centroid is not located within any planning district.")
         st.stop()
 
     detected_plan = district_query.features[0].attributes['PLANNAME'].strip().upper()
