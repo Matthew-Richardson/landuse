@@ -16,9 +16,8 @@ PARCEL_FEATURE_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_La
 DISTRICTS_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/2"
 ORTHO_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
 DISTRICT_LAYER_MAP = {
-    "FORT LEWIS MESA": "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/4",
     "SOUTH EAST LA PLATA": None,
-    "NORTH COUNTY": "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/14"
+    "NORTH COUNTY": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer"
 }
 EXCEL_PATH = "LandUse_Master.xlsx"
 
