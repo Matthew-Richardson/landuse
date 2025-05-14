@@ -42,3 +42,19 @@ if st.button("Find Parcel") and apn_input:
     transformer = Transformer.from_crs(f"EPSG:{parcel_sr['wkid']}", "EPSG:4326", always_xy=True)
     lon, lat = transformer.transform(centroid['x'], centroid['y'])
     st.write("Centroid (WGS84):", {"longitude": lon, "latitude": lat})
+
+    # Query district layer using centroid point
+    district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
+    district_query = district_layer.query(
+        geometry=centroid,
+        geometry_type="esriGeometryPoint",
+        spatial_rel="esriSpatialRelIntersects",
+        out_fields="PLANNAME"
+    )
+
+    if not district_query.features:
+        st.error("No planning district found at parcel centroid.")
+    else:
+        plan_name = district_query.features[0].attributes['PLANNAME']
+        st.subheader("Planning District")
+        st.write(plan_name)
