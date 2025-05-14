@@ -1,4 +1,6 @@
 streamlit
 arcgis
-pyproj
 shapely
+pyproj
+folium
+streamlit-folium
