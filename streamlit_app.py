@@ -26,11 +26,9 @@ district_query = district_layer.query(
     out_fields="PLANNAME"
 )
 
-st.write("Raw query result:", district_query)
-
 if not district_query.features:
     st.error("No planning district found at specified coordinates.")
 else:
-    plan_name = district_query.features[0].attributes['PLANNAME']
-    st.subheader("Planning District")
-    st.write(plan_name)
+    st.subheader("All Intersecting Districts")
+    for feature in district_query.features:
+        st.write(feature.attributes['PLANNAME'])
