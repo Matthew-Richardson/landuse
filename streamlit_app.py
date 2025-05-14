@@ -22,13 +22,13 @@ district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
 district_query = district_layer.query(
     geometry=manual_point,
     geometry_type="esriGeometryPoint",
-    spatial_rel="esriSpatialRelIntersects",
+    spatial_rel="esriSpatialRelContains",
     out_fields="PLANNAME"
 )
 
 if not district_query.features:
     st.error("No planning district found at specified coordinates.")
 else:
-    st.subheader("All Intersecting Districts")
-    for feature in district_query.features:
-        st.write(feature.attributes['PLANNAME'])
+    st.subheader("Detected Planning District")
+    plan_name = district_query.features[0].attributes['PLANNAME']
+    st.write(plan_name)
