@@ -17,7 +17,7 @@ DISTRICTS_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_L
 ORTHO_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
 DISTRICT_LAYER_MAP = {
     "SOUTH EAST LA PLATA": None,
-    "NORTH COUNTY": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer"
+    "NORTH COUNTY": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer/0"
 }
 EXCEL_PATH = "LandUse_Master.xlsx"
 
