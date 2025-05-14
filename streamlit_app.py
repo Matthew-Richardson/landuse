@@ -24,7 +24,7 @@ if st.button("Check District") and apn_input:
     district_query = district_layer.query(
         geometry=parcel_geom,
         geometry_type="esriGeometryPolygon",
-        spatial_rel="esriSpatialRelIntersects",
+        spatial_rel="esriSpatialRelContains",
         out_fields="PLANNAME"
     )
 
