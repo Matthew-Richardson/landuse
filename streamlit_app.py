@@ -69,44 +69,40 @@ if apn_input:
             break
 
     # === Interactive Map Previews with folium ===
-    import folium
-    from streamlit_folium import st_folium
+    try:
+        import folium
+        from streamlit_folium import st_folium
 
-    st.subheader("Interactive Parcel Maps")
+        st.subheader("Interactive Parcel Maps")
 
-    base_map = folium.Map(location=[y, x], zoom_start=15, tiles=None)
+        base_map = folium.Map(location=[y, x], zoom_start=15, tiles=None)
 
-    folium.TileLayer(
-        tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/tile/{z}/{y}/{x}",
-        attr="Parcels",
-        name="Parcels"
-    ).add_to(base_map)
+        folium.TileLayer(
+            tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/tile/{z}/{y}/{x}",
+            attr="Parcels",
+            name="Parcels"
+        ).add_to(base_map)
 
-    folium.TileLayer(
-        tiles="https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer/tile/{z}/{y}/{x}",
-        attr="Ortho 2023",
-        name="Ortho"
-    ).add_to(base_map)
+        folium.TileLayer(
+            tiles="https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer/tile/{z}/{y}/{x}",
+            attr="Ortho 2023",
+            name="Ortho"
+        ).add_to(base_map)
 
-    folium.TileLayer(
-        tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/tile/{z}/{y}/{x}",
-        attr="Land Use",
-        name="Land Use"
-    ).add_to(base_map)
+        folium.TileLayer(
+            tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/tile/{z}/{y}/{x}",
+            attr="Land Use",
+            name="Land Use"
+        ).add_to(base_map)
 
-    folium.Marker([y, x], tooltip=f"APN: {apn_input}").add_to(base_map)
+        folium.Marker([y, x], tooltip=f"APN: {apn_input}").add_to(base_map)
 
-    folium.LayerControl().add_to(base_map)
+        folium.LayerControl().add_to(base_map)
 
-    st_data = st_folium(base_map, width=700, height=500)
+        st_data = st_folium(base_map, width=700, height=500)
 
-    st.caption("Use the layer toggle to view parcel, ortho, and land use maps.")
-
-    except Exception as e:
-        st.warning(f"Map rendering failed: {e}")
-
-
+        st.caption("Use the layer toggle to view parcel, ortho, and land use maps.")
         st.subheader("Detected Planning District")
-        st.write(matching_plan)
+    st.write(matching_plan)
     else:
         st.error("No planning district polygon contains the centroid.")
