@@ -9,27 +9,20 @@ DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest
 x = -107.80174291778516
 y = 37.49508874613804
 
-st.title("District Plan from Hardcoded Coordinates")
-st.write("Using Centroid (WGS84):", {"longitude": x, "latitude": y})
+st.title("District Plan Lookup")
+st.write("Centroid (WGS84):", {"longitude": x, "latitude": y})
 
-from pyproj import Transformer
-
-transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
-x_merc, y_merc = transformer.transform(x, y)
 manual_point = {
-    "x": x_merc,
-    "y": y_merc,
-    "spatialReference": {"wkid": 3857}
+    "x": x,
+    "y": y,
+    "spatialReference": {"wkid": 4326}
 }
 
 district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
-layer_info = district_layer.properties
-sr = layer_info.extent.spatialReference['wkid']
-st.write("Layer Spatial Reference WKID:", sr)
 district_query = district_layer.query(
     geometry=manual_point,
     geometry_type="esriGeometryPoint",
-    spatial_rel="esriSpatialRelContains",
+    spatial_rel="esriSpatialRelIntersects",
     out_fields="PLANNAME"
 )
 
@@ -39,5 +32,5 @@ if not district_query.features:
     st.error("No planning district found at specified coordinates.")
 else:
     plan_name = district_query.features[0].attributes['PLANNAME']
-    st.subheader("Planning District at Point")
+    st.subheader("Planning District")
     st.write(plan_name)
