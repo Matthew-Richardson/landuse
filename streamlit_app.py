@@ -14,12 +14,12 @@ st.write("Using Centroid (WGS84):", {"longitude": x, "latitude": y})
 
 from pyproj import Transformer
 
-transformer = Transformer.from_crs("EPSG:4326", "EPSG:26913", always_xy=True)
-x_utm, y_utm = transformer.transform(x, y)
+transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+x_merc, y_merc = transformer.transform(x, y)
 manual_point = {
-    "x": x_utm,
-    "y": y_utm,
-    "spatialReference": {"wkid": 26913}
+    "x": x_merc,
+    "y": y_merc,
+    "spatialReference": {"wkid": 3857}
 }
 
 district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
