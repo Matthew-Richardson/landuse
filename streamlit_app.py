@@ -17,11 +17,12 @@ DISTRICTS_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_L
 ORTHO_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
 DISTRICT_LAYER_MAP = {
     "FORT LEWIS MESA": "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/4",
-    "SOUTH EAST LA PLATA": None
+    "SOUTH EAST LA PLATA": None,
+    "NORTH COUNTY": "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/14"
 }
 EXCEL_PATH = "LandUse_Master.xlsx"
 
-# === INIT GIS SESSION with OAuth ===
+# === INIT GIS SESSION with public access ===
 gis = GIS()
 
 # === UI ===
@@ -67,7 +68,11 @@ Land Use: No accepted land use code
         st.stop()
 
     land_use_layer = FeatureLayer(land_use_url)
-    land_use_query = land_use_layer.query(geometry=parcel_geom, spatial_rel="esriSpatialRelIntersects", out_fields="TYPE")
+    try:
+        land_use_query = land_use_layer.query(geometry=parcel_geom, spatial_rel="esriSpatialRelIntersects", out_fields="TYPE")
+    except Exception as e:
+        st.error("Failed to query the land use layer. It may require login or does not support spatial queries.")
+        st.stop()
 
     if not land_use_query.features:
         st.error("No intersecting land use polygon found for this parcel.")
@@ -122,7 +127,6 @@ Description: {description}
         # Show interactive map
         st_data = st_folium(folium_map, width=700, height=500)
 
-        # Save static JPEG
         st.markdown("### Download Map Image")
         st.markdown("Due to limitations in cloud rendering, download is only available via screenshot.")
     except Exception as e:
