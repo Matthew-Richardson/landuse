@@ -13,11 +13,11 @@ from PIL import Image
 
 # === CONFIG ===
 PARCEL_FEATURE_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
-DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer"
+DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer/0"
 ORTHO_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
 DISTRICT_LAYER_MAP = {
     "SOUTH EAST LA PLATA": None,
-    "NORTH COUNTY DISTRICT PLAN": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer/"
+    "NORTH COUNTY DISTRICT PLAN": "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/North_County/FeatureServer/0"
 }
 EXCEL_PATH = "LandUse_Master.xlsx"
 
