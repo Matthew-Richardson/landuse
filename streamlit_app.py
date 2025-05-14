@@ -103,6 +103,9 @@ if apn_input:
 
         st.caption("Use the layer toggle to view parcel, ortho, and land use maps.")
         st.subheader("Detected Planning District")
-    st.write(matching_plan)
+        st.write(matching_plan)
+
+    except Exception as e:
+        st.warning(f"Map rendering failed: {e}")
     else:
         st.error("No planning district polygon contains the centroid.")
