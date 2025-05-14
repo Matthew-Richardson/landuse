@@ -73,29 +73,9 @@ if apn_input:
 
         st.subheader("Interactive Parcel Maps")
 
-        base_map = folium.Map(location=[y, x], zoom_start=15, tiles=None)
+        base_map = folium.Map(location=[y, x], zoom_start=16, tiles="OpenStreetMap")
 
-        folium.TileLayer(
-            tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/tile/{z}/{y}/{x}",
-            attr="Parcels",
-            name="Parcels"
-        ).add_to(base_map)
-
-        folium.TileLayer(
-            tiles="https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer/tile/{z}/{y}/{x}",
-            attr="Ortho 2023",
-            name="Ortho"
-        ).add_to(base_map)
-
-        folium.TileLayer(
-            tiles="https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/tile/{z}/{y}/{x}",
-            attr="Land Use",
-            name="Land Use"
-        ).add_to(base_map)
-
-        folium.Marker([y, x], tooltip=f"APN: {apn_input}").add_to(base_map)
-
-        folium.LayerControl().add_to(base_map)
+        folium.Marker([y, x], tooltip=f"APN: {apn_input}", icon=folium.Icon(color='red')).add_to(base_map)
 
         st_data = st_folium(base_map, width=700, height=500)
 
