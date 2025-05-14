@@ -3,7 +3,7 @@ import streamlit as st
 from arcgis.features import FeatureLayer
 
 # === CONFIG ===
-DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer"
+DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest/services/Planning_District_Outline/FeatureServer/"
 
 # === Hardcoded Centroid in WGS84 ===
 x = -107.80174291778516
