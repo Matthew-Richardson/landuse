@@ -1,6 +1,7 @@
 # streamlit_app.py
 import streamlit as st
 from arcgis.features import FeatureLayer
+from shapely.geometry import shape
 
 # === CONFIG ===
 PARCEL_FEATURE_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
@@ -24,17 +25,28 @@ if st.button("Find Parcel") and apn_input:
     for key, value in parcel_attrs.items():
         st.write(f"{key}: {value}")
 
-    # Intersect with planning district
+    # Calculate parcel centroid from geometry
+    rings = parcel_feature.geometry["rings"]
+    coords = rings[0]
+    xs = [pt[0] for pt in coords]
+    ys = [pt[1] for pt in coords]
+    centroid = {
+        "x": sum(xs) / len(xs),
+        "y": sum(ys) / len(ys),
+        "spatialReference": {"wkid": 4326}
+    }
+
+    # Query district by centroid point
     district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
     district_query = district_layer.query(
-        geometry=parcel_feature.geometry,
-        geometry_type="esriGeometryPolygon",
+        geometry=centroid,
+        geometry_type="esriGeometryPoint",
         spatial_rel="esriSpatialRelIntersects",
         out_fields="PLANNAME"
     )
 
     if not district_query.features:
-        st.error("No intersecting planning district found.")
+        st.error("No planning district found at parcel centroid.")
     else:
         plan_name = district_query.features[0].attributes['PLANNAME']
         st.subheader("Planning District")
