@@ -4,3 +4,4 @@ arcgis
 folium
 streamlit-folium
 shapely
+openpyxl
