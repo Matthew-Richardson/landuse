@@ -2,7 +2,6 @@
 import streamlit as st
 from arcgis.features import FeatureLayer
 from shapely.geometry import Point, shape
-from pyproj import Transformer
 
 # === CONFIG ===
 PARCEL_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
@@ -31,16 +30,14 @@ if apn_input:
     st.write("Centroid (WGS84):", {"longitude": x, "latitude": y})
 
     # Use centroid directly in WGS84
-point_geom = Point(x, y)
-reprojected_point = {
-    "x": x,
-    "y": y,
-    "spatialReference": {"wkid": 4326}
-}
+    point_geom = Point(x, y)
+    reprojected_point = {
+        "x": x,
+        "y": y,
+        "spatialReference": {"wkid": 4326}
     }
 
     # Query all intersecting polygons
-    point_geom = Point(x_merc, y_merc)
     district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
     district_query = district_layer.query(
         geometry=reprojected_point,
