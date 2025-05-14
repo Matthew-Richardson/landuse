@@ -9,7 +9,7 @@ DISTRICTS_LAYER_URL = "https://services2.arcgis.com/ilLrLpXfElYxSy9y/arcgis/rest
 
 # === Hardcoded Centroid in WGS84 ===
 x = -107.840644
-y = 37.406496°
+y = 37.406496
 
 st.title("District Plan Lookup")
 st.write("Centroid (WGS84):", {"longitude": x, "latitude": y})
