@@ -37,7 +37,12 @@ if st.button("Find Parcel") and apn_input:
         "spatialReference": parcel_sr
     }
 
-    st.write("Centroid used for query:", centroid)
+    from pyproj import Transformer
+
+    # Convert centroid to WGS84 for display
+    transformer = Transformer.from_crs(f"EPSG:{parcel_sr['wkid']}", "EPSG:4326", always_xy=True)
+    lon, lat = transformer.transform(centroid['x'], centroid['y'])
+    st.write("Centroid (WGS84):", {"longitude": lon, "latitude": lat})
 
     # Query district by centroid point
     district_layer = FeatureLayer(DISTRICTS_LAYER_URL)
