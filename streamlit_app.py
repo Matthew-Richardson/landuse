@@ -3,11 +3,13 @@ import streamlit as st
 import pandas as pd
 from arcgis.gis import GIS
 from arcgis.features import FeatureLayer
-from arcgis.mapping import WebMap
-from arcgis.geometry import project
-import tempfile
-import os
+import folium
+from streamlit_folium import st_folium
 import base64
+from shapely.geometry import shape
+import json
+import io
+from PIL import Image
 
 # === CONFIG ===
 PARCEL_FEATURE_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Parcel_Related/MapServer/4"
@@ -15,17 +17,7 @@ DISTRICTS_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Operational_L
 ORTHO_LAYER_URL = "https://gis.lpcgov.org/arcgis/rest/services/Orthos/Ortho_2023/MapServer"
 DISTRICT_LAYER_MAP = {
     "FORT LEWIS MESA PLAN": "https://gis.lpcgov.org/arcgis/rest/services/Operational_Layers/Planning_and_Land_Use_Layers/MapServer/4",
-    "SOUTH EAST LA PLATA": None,
-    "ANIMAS VALLEY": None,
-    "BAYFIELD DISTRICT PLAN": None,
-    "DURANGO DISTRICT PLAN": None,
-    "FLORIDA MESA": None,
-    "LA POSTA ROAD": None,
-    "FLORIDA ROAD": None,
-    "JUNCTION CREEK": None,
-    "NORTH COUNTY": None,
-    "VALLECITO": None,
-    "WEST DURANGO": None
+    "SOUTH EAST LA PLATA": None
 }
 EXCEL_PATH = "LandUse_Master.xlsx"
 
@@ -113,40 +105,26 @@ Description: {description}
     st.text(summary_text)
     st.download_button("Download Summary", summary_text, file_name=f"{apn_input}_summary.txt")
 
-    def display_and_download_image(img_bytes, caption, filename):
-        st.image(img_bytes, caption=caption)
-        b64 = base64.b64encode(img_bytes).decode()
-        href = f'<a href="data:image/jpeg;base64,{b64}" download="{filename}">Download {caption}</a>'
-        st.markdown(href, unsafe_allow_html=True)
-
-    st.subheader("Map 1: Context Map")
+    # === Map Display with Polygon ===
+    st.subheader("Parcel Map Preview")
     try:
-        context_map = WebMap()
-        context_map.add_layer({"url": PARCEL_FEATURE_URL, "popupInfo": {}, "labelingInfo": [{"labelExpressionInfo": {"expression": "$feature.APN"}, "symbol": {"type": "esriTS", "color": [255, 0, 0, 255], "haloColor": [255, 255, 255, 255], "haloSize": 1.5, "font": {"size": 12, "weight": "bold"}}}], "renderer": {"type": "simple", "symbol": {"type": "esriSFS", "style": "esriSFSSolid", "color": [255, 0, 0, 64], "outline": {"color": [255, 0, 0, 255], "width": 1}}}}, options={"title": "Parcel"})
-        context_map.set_extent(parcel_geom['extent'])
-        context_img = context_map.export_map()
-        display_and_download_image(context_img, "Context Map", f"{apn_input}_context.jpg")
-    except Exception as e:
-        st.warning(f"Could not generate context map: {e}")
+        folium_map = folium.Map(zoom_start=17)
+        geojson = {"type": "Feature", "geometry": parcel_geom, "properties": {"APN": apn_input}}
+        folium.GeoJson(
+            geojson,
+            name="Parcel",
+            tooltip=folium.GeoJsonTooltip(fields=["APN"]),
+            style_function=lambda x: {"fillColor": "#ff0000", "color": "#ff0000", "weight": 2, "fillOpacity": 0.1}
+        ).add_to(folium_map)
 
-    st.subheader("Map 2: Ortho Imagery Map")
-    try:
-        ortho_map = WebMap()
-        ortho_map.add_layer({"url": ORTHO_LAYER_URL, "opacity": 1.0})
-        ortho_map.add_layer({"url": PARCEL_FEATURE_URL, "popupInfo": {}, "labelingInfo": [{"labelExpressionInfo": {"expression": "$feature.APN"}, "symbol": {"type": "esriTS", "color": [255, 0, 0, 255], "haloColor": [255, 255, 255, 255], "haloSize": 1.5, "font": {"size": 12, "weight": "bold"}}}], "renderer": {"type": "simple", "symbol": {"type": "esriSLS", "style": "esriSLSSolid", "color": [255, 0, 0, 255], "width": 2}}}, options={"title": "Parcel Outline"})
-        ortho_map.set_extent(parcel_geom['extent'])
-        ortho_img = ortho_map.export_map()
-        display_and_download_image(ortho_img, "Ortho Imagery Map", f"{apn_input}_ortho.jpg")
-    except Exception as e:
-        st.warning(f"Could not generate ortho map: {e}")
+        coords = shape(parcel_geom).centroid.coords[0]
+        folium_map.location = [coords[1], coords[0]]
 
-    st.subheader("Map 3: Land Use Classification Map")
-    try:
-        landuse_map = WebMap()
-        landuse_map.add_layer({"url": land_use_url, "opacity": 0.6})
-        landuse_map.add_layer({"url": PARCEL_FEATURE_URL, "popupInfo": {}, "labelingInfo": [{"labelExpressionInfo": {"expression": "$feature.APN"}, "symbol": {"type": "esriTS", "color": [255, 0, 0, 255], "haloColor": [255, 255, 255, 255], "haloSize": 1.5, "font": {"size": 12, "weight": "bold"}}}], "renderer": {"type": "simple", "symbol": {"type": "esriSLS", "style": "esriSLSSolid", "color": [255, 0, 0, 255], "width": 2}}}, options={"title": "Parcel"})
-        landuse_map.set_extent(parcel_geom['extent'])
-        landuse_img = landuse_map.export_map()
-        display_and_download_image(landuse_img, "Land Use Classification Map", f"{apn_input}_landuse.jpg")
+        # Show interactive map
+        st_data = st_folium(folium_map, width=700, height=500)
+
+        # Save static JPEG
+        st.markdown("### Download Map Image")
+        st.markdown("Due to limitations in cloud rendering, download is only available via screenshot.")
     except Exception as e:
-        st.warning(f"Could not generate land use map: {e}")
+        st.warning(f"Could not generate preview map: {e}")
