@@ -22,7 +22,7 @@ DISTRICT_LAYER_MAP = {
 EXCEL_PATH = "LandUse_Master.xlsx"
 
 # === INIT GIS SESSION with OAuth ===
-gis = GIS("https://www.arcgis.com", client_id="YOUR_CLIENT_ID", authorize=False)
+gis = GIS()
 
 # === UI ===
 st.title("Parcel Land Use Summary Generator")
