@@ -30,13 +30,13 @@ if apn_input:
 
     st.write("Centroid (WGS84):", {"longitude": x, "latitude": y})
 
-    # Reproject centroid to EPSG:3857 (Web Mercator)
-    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
-    x_merc, y_merc = transformer.transform(x, y)
-    reprojected_point = {
-        "x": x_merc,
-        "y": y_merc,
-        "spatialReference": {"wkid": 3857}
+    # Use centroid directly in WGS84
+point_geom = Point(x, y)
+reprojected_point = {
+    "x": x,
+    "y": y,
+    "spatialReference": {"wkid": 4326}
+}
     }
 
     # Query all intersecting polygons
